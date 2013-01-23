@@ -29,6 +29,12 @@ class Game {
         this._player2 = new Player('I', 'K', this, 'right');
     }
 
+    run(): void {
+        this.update();
+        this.draw();
+    }
+
+
     update(): void {
         if (this._player1.update(this.keysDown, this._ball)) {
             this._player2.win();
@@ -56,6 +62,24 @@ class Game {
         this._ball.resetPosition();
     }
 
+    start(): void {
+        var requestAnimFrame: (callback: () => void ) => void = (function () {
+            return window.requestAnimationFrame ||
+                (<any>window).webkitRequestAnimationFrame ||
+                (<any>window).mozRequestAnimationFrame ||
+                (<any>window).oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60, new Date().getTime());
+                };
+        })();
+        var updateFunc = () => {
+            this.run();
+            requestAnimFrame(updateFunc);
+        }
+        requestAnimFrame(updateFunc);
+    }
+
     keysDown: { [index: string]: bool; } = {};
 
     private keyName(e: KeyboardEvent) {
@@ -68,8 +92,5 @@ $(document).ready((e) => {
     var el = <HTMLCanvasElement>document.getElementById('pongCanvas');
     var FPS = 30;
     var game = new Game(el);
-    setInterval(() => {
-        game.update();
-        game.draw();
-    }, 1000 / FPS);
+    game.start();
 });

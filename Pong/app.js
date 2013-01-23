@@ -155,6 +155,10 @@ var Game = (function () {
         this._player1 = new Player('W', 'S', this, 'left');
         this._player2 = new Player('I', 'K', this, 'right');
     }
+    Game.prototype.run = function () {
+        this.update();
+        this.draw();
+    };
     Game.prototype.update = function () {
         if(this._player1.update(this.keysDown, this._ball)) {
             this._player2.win();
@@ -179,6 +183,19 @@ var Game = (function () {
         this._player2.reset();
         this._ball.resetPosition();
     };
+    Game.prototype.start = function () {
+        var _this = this;
+        var requestAnimFrame = (function () {
+            return window.requestAnimationFrame || (window).webkitRequestAnimationFrame || (window).mozRequestAnimationFrame || (window).oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+                window.setTimeout(callback, 1000 / 60, new Date().getTime());
+            };
+        })();
+        var updateFunc = function () {
+            _this.run();
+            requestAnimFrame(updateFunc);
+        };
+        requestAnimFrame(updateFunc);
+    };
     Game.prototype.keyName = function (e) {
         return String.fromCharCode(e.which).toLowerCase();
     };
@@ -188,10 +205,7 @@ $(document).ready(function (e) {
     var el = document.getElementById('pongCanvas');
     var FPS = 30;
     var game = new Game(el);
-    setInterval(function () {
-        game.update();
-        game.draw();
-    }, 1000 / FPS);
+    game.start();
 });
 var Ball = (function () {
     function Ball(x, y, game) {
