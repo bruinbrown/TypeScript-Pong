@@ -15,13 +15,13 @@ class Player {
     }
 
 
-    update(keysDown, ball:Ball): bool {
+    update(keysDown, ball:Ball,elapsedTime:number): bool {
         var change: number = 0;
         if (keysDown[this.listenUp]&&this.paddle.Y>0) {
-            change -= 5;
+            change -= ((elapsedTime / 17) *5);
         }
         if (keysDown[this.listenDown]&&((this.paddle.Y+this.paddle.Length)<this.game._canvasHeight)) {
-            change += 5;
+            change += ((elapsedTime / 17) * 5);
         }
        
         switch (this.side) {

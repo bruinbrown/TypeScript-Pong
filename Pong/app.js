@@ -62,13 +62,13 @@ var Player = (function () {
         this.paddle.setSide(side, game._canvasWidth);
         this.paddle.resetPosition(game._canvasHeight);
     }
-    Player.prototype.update = function (keysDown, ball) {
+    Player.prototype.update = function (keysDown, ball, elapsedTime) {
         var change = 0;
         if(keysDown[this.listenUp] && this.paddle.Y > 0) {
-            change -= 5;
+            change -= ((elapsedTime / 17) * 5);
         }
         if(keysDown[this.listenDown] && ((this.paddle.Y + this.paddle.Length) < this.game._canvasHeight)) {
-            change += 5;
+            change += ((elapsedTime / 17) * 5);
         }
         switch(this.side) {
             case 'left': {
@@ -155,20 +155,20 @@ var Game = (function () {
         this._player1 = new Player('W', 'S', this, 'left');
         this._player2 = new Player('I', 'K', this, 'right');
     }
-    Game.prototype.run = function () {
-        this.update();
+    Game.prototype.run = function (elapsedTime) {
+        this.update(elapsedTime);
         this.draw();
     };
-    Game.prototype.update = function () {
-        if(this._player1.update(this.keysDown, this._ball)) {
+    Game.prototype.update = function (elapsedTime) {
+        if(this._player1.update(this.keysDown, this._ball, elapsedTime)) {
             this._player2.win();
             this.reset();
         }
-        if(this._player2.update(this.keysDown, this._ball)) {
+        if(this._player2.update(this.keysDown, this._ball, elapsedTime)) {
             this._player1.win();
             this.reset();
         }
-        this._ball.update();
+        this._ball.update(elapsedTime);
     };
     Game.prototype.draw = function () {
         this._canvasContext.clearRect(0, 0, this._canvasWidth, this._canvasHeight);
@@ -191,9 +191,13 @@ var Game = (function () {
             };
         })();
         var updateFunc = function () {
-            _this.run();
+            var currentTime = (new Date()).getTime();
+            var timeDiff = currentTime - _this.previousTime;
+            _this.run(timeDiff);
             requestAnimFrame(updateFunc);
+            _this.previousTime = currentTime;
         };
+        this.previousTime = (new Date()).getTime();
         requestAnimFrame(updateFunc);
     };
     Game.prototype.keyName = function (e) {
@@ -238,9 +242,9 @@ var Ball = (function () {
     Ball.prototype.flipDirection = function () {
         this.XDirection *= -1;
     };
-    Ball.prototype.update = function () {
-        this.x += (2 * this.XDirection);
-        this.y += (2 * this.YDirection);
+    Ball.prototype.update = function (elapsedTime) {
+        this.x += ((elapsedTime / 17) * (2 * this.XDirection));
+        this.y += ((elapsedTime / 17) * (2 * this.YDirection));
         if((this.y - this.width) < 0 || (this.y + this.width) > this.game._canvasHeight) {
             this.YDirection *= -1;
         }

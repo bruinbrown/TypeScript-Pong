@@ -32,9 +32,9 @@ class Ball {
         this.XDirection *= -1;
     }
 
-    update(): void {
-        this.x += (2*this.XDirection);
-        this.y += (2*this.YDirection);
+    update(elapsedTime:number): void {
+        this.x += ((elapsedTime/17)*(2*this.XDirection));
+        this.y += ((elapsedTime/17)*(2*this.YDirection));
         if ((this.y-this.width) < 0 || (this.y+this.width) > this.game._canvasHeight) {
             this.YDirection *= -1;
         }

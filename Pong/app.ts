@@ -11,6 +11,7 @@ class Game {
     _player1: Player;
     _player2: Player;
     _ball: Ball;
+    previousTime: number;
     i: number = 0;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -29,22 +30,22 @@ class Game {
         this._player2 = new Player('I', 'K', this, 'right');
     }
 
-    run(): void {
-        this.update();
+    run(elapsedTime:number): void {
+        this.update(elapsedTime);
         this.draw();
     }
 
 
-    update(): void {
-        if (this._player1.update(this.keysDown, this._ball)) {
+    update(elapsedTime:number): void {
+        if (this._player1.update(this.keysDown, this._ball, elapsedTime)) {
             this._player2.win();
             this.reset();
         }
-        if (this._player2.update(this.keysDown, this._ball)) {
+        if (this._player2.update(this.keysDown, this._ball,elapsedTime)) {
             this._player1.win();
             this.reset();
         }
-        this._ball.update();
+        this._ball.update(elapsedTime);
     }
 
     draw(): void {
@@ -74,9 +75,13 @@ class Game {
                 };
         })();
         var updateFunc = () => {
-            this.run();
+            var currentTime = (new Date()).getTime();
+            var timeDiff = currentTime - this.previousTime;
+            this.run(timeDiff);
             requestAnimFrame(updateFunc);
+            this.previousTime = currentTime;
         }
+        this.previousTime = (new Date()).getTime();
         requestAnimFrame(updateFunc);
     }
 
