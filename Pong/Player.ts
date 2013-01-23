@@ -23,26 +23,25 @@ class Player {
         if (keysDown[this.listenDown]&&((this.paddle.Y+this.paddle.Length)<this.game._canvasHeight)) {
             change += 5;
         }
-        if ((ball.y > this.paddle.Y) && (ball.y < (this.paddle.Y + this.paddle.Length))) {
-            switch (this.side) {
-                case 'left':
-                    if ((ball.x < (this.paddle.X+this.paddle.Width)) && (ball.x > 0)) {
-                        ball.flipDirection();
-                    }
-                    else if (ball.x < 0) {
-                        return true;
-                    }
-                    break;
-                case 'right':
-                    if ((ball.x > (this.game._canvasWidth-this.paddle.Width)) && (ball.x < this.game._canvasWidth)) {
-                        ball.flipDirection();
-                    }
-                    else if(ball.x > this.game._canvasWidth) {
-                        return true;
-                    }
-                default:
-                    break;
-            }
+       
+        switch (this.side) {
+            case 'left':
+                if ((ball.x < (this.paddle.X + this.paddle.Width)) && (ball.x > 0) && (ball.y > this.paddle.Y) && (ball.y < (this.paddle.Y + this.paddle.Length))) {
+                    ball.flipDirection();
+                }
+                else if (ball.x < 0) {
+                    return true;
+                }
+                break;
+            case 'right':
+                if ((ball.x > (this.game._canvasWidth - this.paddle.Width)) && (ball.x < this.game._canvasWidth) && (ball.y > this.paddle.Y) && (ball.y < (this.paddle.Y + this.paddle.Length))) {
+                    ball.flipDirection();
+                }
+                else if (ball.x > this.game._canvasWidth) {
+                    return true;
+                }
+            default:
+                break;
         }
         this.paddle.update(change);
         return false;
