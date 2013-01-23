@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{331F5B23-E121-4F2B-AD9C-7845C5C18FBB}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app.css" />
+    <Content Include="app.min.js">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <Content Include="default.htm" />
+    <Content Include="app.js">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <Content Include="file1.js">
+      <DependentUpon>references.ts</DependentUpon>
+    </Content>
+    <Content Include="jquery-1.9.0.min.js" />
+    <Content Include="jquery.d.ts" />
+    <Content Include="Paddle.min.js">
+      <DependentUpon>Paddle.ts</DependentUpon>
+    </Content>
+    <Content Include="Player.js">
+      <DependentUpon>Player.ts</DependentUpon>
+    </Content>
+    <Content Include="Player.min.js">
+      <DependentUpon>Player.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Player.ts" />
+    <TypeScriptCompile Include="Ball.ts" />
+    <Content Include="Ball.js">
+      <DependentUpon>Ball.ts</DependentUpon>
+    </Content>
+    <Content Include="Ball.min.js">
+      <DependentUpon>Ball.ts</DependentUpon>
+    </Content>
+    <Content Include="Paddle.js">
+      <DependentUpon>Paddle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Paddle.ts" />
+    <TypeScriptCompile Include="references.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.js.map">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+    <Content Include="Ball.js.map">
+      <DependentUpon>Ball.ts</DependentUpon>
+    </Content>
+    <Content Include="Player.js.map">
+      <DependentUpon>Player.ts</DependentUpon>
+    </Content>
+    <Content Include="Paddle.js.map">
+      <DependentUpon>Paddle.ts</DependentUpon>
+    </Content>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Pong</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>2340</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2250/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptSourceMap> --sourcemap</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Message Text="Compiling TypeScript files" />
+    <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="tsc$(TypeScriptSourceMap) --target ES5 --out app.js @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+  </Target>
+</Project>
